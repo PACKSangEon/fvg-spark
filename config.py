@@ -26,4 +26,5 @@ TIMEFRAME  = "1Min"
 PRICE_SCALE = 10_000
 
 # Parquet 저장 경로
-PARQUET_DIR = "data/parquet"
+PARQUET_DIR     = "data/parquet"      # 원본 1분봉
+FVG_PARQUET_DIR = "data/fvgs_parquet" # FVG 탐지 결과
