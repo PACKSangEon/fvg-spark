@@ -60,7 +60,7 @@ def _process_one(symbol: str, ttl: int) -> dict:
         table,
         root_path=config.FVG_PARQUET_DIR,
         partition_cols=["symbol"],
-        existing_data_behavior="overwrite_or_ignore",
+        existing_data_behavior="delete_matching",
         compression="snappy",
     )
 
