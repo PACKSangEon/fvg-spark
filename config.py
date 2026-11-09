@@ -16,6 +16,16 @@ SYMBOLS = [
     "GOOGL", "TSLA", "AVGO", "COST", "NFLX",
 ]
 
+# symbols.txt 가 있으면 그 목록을 쓴다 (한 줄에 심볼 하나, # 은 주석)
+SYMBOLS_FILE = "symbols.txt"
+if os.path.exists(SYMBOLS_FILE):
+    with open(SYMBOLS_FILE, encoding="utf-8") as _f:
+        _syms = [ln.split("#")[0].strip().upper() for ln in _f]
+    SYMBOLS = [s for s in _syms if s] or SYMBOLS
+
+# Alpaca 데이터 피드: "iex" (무료, 거래 일부만) 또는 "sip" (전체 거래소 통합, 최근 15분 제외 무료)
+FEED = os.environ.get("ALPACA_FEED", "iex")
+
 # 수집 기간
 START_DATE = "2022-01-01"
 END_DATE   = "2025-12-31"

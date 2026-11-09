@@ -6,6 +6,8 @@
     python collect_bars.py --symbols AAPL MSFT    # 심볼 지정
     python collect_bars.py --start 2024-01-01 --end 2024-03-31  # 기간 지정
     python collect_bars.py --dry-run              # 실제 저장 없이 첫 페이지만 확인
+    python collect_bars.py --feed sip             # SIP 피드 (전체 거래소 통합)
+    python collect_bars.py --outdir data/parquet_sip --feed sip   # 피드별로 따로 저장
 
 진행 상황:
     각 (symbol, month) 조합이 Parquet 파티션 파일로 저장된다.
@@ -50,12 +52,13 @@ def run(
     output_dir: str,
     dry_run: bool,
     force: bool,
+    feed: str,
 ) -> None:
     client = AlpacaClient(config.ALPACA_KEY, config.ALPACA_SECRET, config.BASE_URL)
     months = monthly_ranges(start, end)
 
     tasks = [(sym, s, e) for sym in symbols for s, e in months]
-    logger.info("총 %d 작업 (심볼 %d × 월 %d)", len(tasks), len(symbols), len(months))
+    logger.info("총 %d 작업 (심볼 %d × 월 %d, feed=%s)", len(tasks), len(symbols), len(months), feed)
 
     skipped = 0
     for symbol, m_start, m_end in tqdm(tasks, unit="month"):
@@ -65,7 +68,8 @@ def run(
             skipped += 1
             continue
 
-        bars = list(client.iter_bars(symbol, m_start + "T00:00:00Z", m_end + "T23:59:59Z", config.TIMEFRAME))
+        bars = list(client.iter_bars(symbol, m_start + "T00:00:00Z", m_end + "T23:59:59Z",
+                                 config.TIMEFRAME, feed))
         logger.info("%-6s  %s  bars=%d", symbol, month_prefix, len(bars))
 
         if dry_run:
@@ -89,6 +93,7 @@ def main() -> None:
     ap.add_argument("--outdir",  default=config.PARQUET_DIR)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force",   action="store_true", help="기존 파티션 덮어쓰기")
+    ap.add_argument("--feed",    default=config.FEED, choices=["iex", "sip"], help="Alpaca 데이터 피드")
     args = ap.parse_args()
 
     os.makedirs(args.outdir, exist_ok=True)
@@ -99,6 +104,7 @@ def main() -> None:
         output_dir=args.outdir,
         dry_run=args.dry_run,
         force=args.force,
+        feed=args.feed,
     )
 
 

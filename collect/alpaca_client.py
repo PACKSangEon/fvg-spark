@@ -2,7 +2,7 @@
 Alpaca Market Data API v2 — 1분봉 히스토리 수집 클라이언트.
 
 무료 티어 제약:
-  - IEX 피드 사용 (feed=iex)
+  - 기본 IEX 피드 (feed=iex). feed=sip 은 최근 15분을 제외한 과거 데이터 조회 가능
   - 요청당 최대 10,000 바, 페이지네이션으로 전체 기간 수집
   - 429 발생 시 지수 백오프 재시도
 """
@@ -43,6 +43,7 @@ class AlpacaClient:
         start: str,
         end: str,
         timeframe: str = "1Min",
+        feed: str = "iex",
     ) -> Iterator[dict]:
         """
         (symbol, start, end) 구간의 바를 페이지 단위로 스트리밍한다.
@@ -56,7 +57,7 @@ class AlpacaClient:
             "timeframe": timeframe,
             "limit":     10_000,
             "adjustment": "all",   # 분할·배당 조정
-            "feed":      "iex",    # 무료 티어
+            "feed":      feed,     # "iex" (무료) 또는 "sip"
             "sort":      "asc",
         }
 
