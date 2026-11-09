@@ -1,8 +1,10 @@
 """
-FVG 탐지 + 완충 시뮬레이션 파이프라인 (PySpark applyInPandas).
+FVG 탐지 + 완충 시뮬레이션 파이프라인 (numpy, 심볼 단위 순차 처리).
 
 각 심볼의 전체 1분봉을 하나의 pandas DataFrame으로 받아
 순차적으로 3-캔들 패턴 탐지와 완충 시뮬레이션을 수행한다.
+detect_fvgs.py 가 ProcessPoolExecutor 로 심볼별 병렬 실행한다.
+같은 규칙의 PySpark 버전: detect/spark_detect.py
 
 Java 엔진 규격과의 일치:
   - 가격: fixed-point long (1 unit = $0.0001)
