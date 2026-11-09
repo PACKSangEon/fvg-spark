@@ -87,7 +87,8 @@ def run(
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Alpaca 1분봉 → Parquet 수집기")
-    ap.add_argument("--symbols", nargs="+", default=config.SYMBOLS)
+    ap.add_argument("--symbols", nargs="+", default=None)
+    ap.add_argument("--symbols-file", default=None, help="줄당 하나씩 심볼이 적힌 텍스트 파일 (#으로 시작하는 줄은 무시)")
     ap.add_argument("--start",   default=config.START_DATE)
     ap.add_argument("--end",     default=config.END_DATE)
     ap.add_argument("--outdir",  default=config.PARQUET_DIR)
@@ -96,9 +97,15 @@ def main() -> None:
     ap.add_argument("--feed",    default=config.FEED, choices=["iex", "sip"], help="Alpaca 데이터 피드")
     args = ap.parse_args()
 
+    if args.symbols_file:
+        with open(args.symbols_file) as f:
+            symbols = [l.strip() for l in f if l.strip() and not l.startswith("#")]
+    else:
+        symbols = args.symbols if args.symbols else config.SYMBOLS
+
     os.makedirs(args.outdir, exist_ok=True)
     run(
-        symbols=args.symbols,
+        symbols=symbols,
         start=args.start,
         end=args.end,
         output_dir=args.outdir,
