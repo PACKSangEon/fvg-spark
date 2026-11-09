@@ -67,7 +67,7 @@ def compare(np_df: pd.DataFrame, sp_df: pd.DataFrame, show: int = 10) -> bool:
 def main() -> None:
     ap = argparse.ArgumentParser(description="numpy vs Spark FVG 결과 비교")
     ap.add_argument("--numpy", default=config.FVG_PARQUET_DIR)
-    ap.add_argument("--spark", default="data/fvgs_spark_parquet")
+    ap.add_argument("--spark", default=config.SPARK_FVG_PARQUET_DIR)
     args = ap.parse_args()
 
     ok = compare(load(args.numpy), load(args.spark))

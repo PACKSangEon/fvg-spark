@@ -35,6 +35,15 @@ TIMEFRAME  = "1Min"
 # 가격 고정소수점: 1 unit = $0.0001 (Java 엔진 io.fvg.core.Prices 와 동일)
 PRICE_SCALE = 10_000
 
+# 데이터셋 전환: FVG_DATASET=iex (기본) 또는 sip
+DATASET = os.environ.get("FVG_DATASET", "iex")
+
 # Parquet 저장 경로
-PARQUET_DIR     = "data/parquet"      # 원본 1분봉
-FVG_PARQUET_DIR = "data/fvgs_parquet" # FVG 탐지 결과
+if DATASET == "sip":
+    PARQUET_DIR          = "data/parquet_sip"
+    FVG_PARQUET_DIR      = "data/fvgs_sip_parquet"
+    SPARK_FVG_PARQUET_DIR = "data/fvgs_sip_spark_parquet"
+else:
+    PARQUET_DIR          = "data/parquet"
+    FVG_PARQUET_DIR      = "data/fvgs_parquet"
+    SPARK_FVG_PARQUET_DIR = "data/fvgs_spark_parquet"

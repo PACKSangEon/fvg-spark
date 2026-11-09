@@ -123,7 +123,7 @@ def main() -> None:
     print(report.to_string(index=False))
 
     os.makedirs("data/stats", exist_ok=True)
-    out = "data/stats/fvg_filter_report.csv"
+    out = f"data/stats/fvg_filter_report_{config.DATASET}.csv"
     report.to_csv(out, index=False)
     print(f"\n저장: {out}")
 

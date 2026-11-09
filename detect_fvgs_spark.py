@@ -21,7 +21,7 @@ import config
 from spark_utils import get_spark
 from detect.spark_detect import detect_fvgs
 
-SPARK_FVG_DIR = "data/fvgs_spark_parquet"
+SPARK_FVG_DIR = config.SPARK_FVG_PARQUET_DIR
 
 
 def main() -> None:
