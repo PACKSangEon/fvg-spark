@@ -3,4 +3,9 @@ data/
 __pycache__/
 *.pyc
 .venv/
+venv/
 *.egg-info/
+*.parquet
+spark-warehouse/
+metastore_db/
+derby.log
